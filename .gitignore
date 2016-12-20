@@ -1,0 +1,9 @@
+*.suo
+obj/
+bin/
+Thumbs.db
+*.user
+workspace.xml
+.vscode/
+.vs
+packages/

@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Markdown Viewer</title>
+    <meta charset="utf-8" />
+    <link href="styles\bootstrap.min.css" rel="stylesheet" />
+    <link href="styles\shCore.css" rel="stylesheet" />
+    <link href="styles\shCoreDefault.css" rel="stylesheet" />
+    <link href="styles\simplemde.min.css" rel="stylesheet" />
+    <link href="styles\font-awesome.min.css" rel="stylesheet" />
+    <link href="styles\app.css" rel="stylesheet" />
+</head>
+<body>
+    <!--<NAV_BAR>-->
+    <nav class="navbar navbar-inverse navbar-fixed-top noprint">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav nav-tabs">
+                <li><a role="presentation" id="btnShowFormatted" class="active"><i class="fa fa-eye" title="Show Formatted"></i> View</a></li>
+                <li><a role="presentation" id="btnEditMarkdown"><i class="fa fa-edit" title="Edit Markdown"></i> Edit</a></li>
+            </ul>
+            <div class="navbar-text" id="h4MdPath"></div>
+            <ul class="nav navbar-nav navbar-right nav-pills">
+                <li>
+                    <a role="presentation" id="btnOpenMarkdown"><i class="fa fa-folder-open-o" title="Open Markdown File"></i> Open</a>
+                </li>
+                <li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-floppy-o"></i> Save As
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a id="btnSaveAsPDF">Save as PDF</a></li>
+                        <li><a id="btnSaveAsHtml">Save as HTML</a></li>
+                        <li><a id="btnSaveAsMarkdown">Save as Markdown</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-gear"></i> Dev
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a id="btnShowDevTools">Open Dev-Tools</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.container-fluid -->
+    </nav>
+    <!--</NAV_BAR>-->
+    <img src="images\Icon.png" id="imgIcon" />
+    <div class="container">
+        <div class="row">
+            <div class='col-xs-12' id="divContent">
+                <p class="bg-info">
+                    <h3 class="text-muted">
+                        <i class="fa fa-cogs"></i> &nbsp;... just give us a sec ... we're loading ...
+                    </h3>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="divAlert" class="alert alert-dismissible" role="alert">
+        <button type="button" class="close" aria-label="Close" id="btnCloseAlert"><span aria-hidden="true">&times;</span></button>
+        <div id="divAlertMessage"></div>
+    </div>
+    <script src="scripts\jquery.js"></script>
+    <script src="scripts\bootstrap.min.js"></script>
+    <script src="scripts\shCore.js"></script>
+    <script src="scripts\shAutoloader.js"></script>
+    <script src="scripts\simplemde.min.js"></script>
+    <script>window.loadBrushes = function () { SyntaxHighlighter.autoloader('{{{SYNTAX_AUTOLOADER}}}'); };</script>
+    <script src="scripts\app.js"></script>
+</body>
+</html>
