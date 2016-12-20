@@ -21,9 +21,7 @@ namespace MarkdownViewer
             };
             this._browser.RegisterJsObject("controller", new PageController());
             this.Controls.Add(this._browser);
-            this._browser.LoadHtml(Program.GetHtmlTemplate(), this._baseUrl);
-            this.Text = Program.MarkdownPath + " - Markdown Viewer";
-            Program.BrowserState = BrowserStates.Previewing;
+            this._browser.LoadHtml(Program.GetHtmlTemplate(), this._baseUrl);            
         }
 
         internal void RunJavscript(string script)

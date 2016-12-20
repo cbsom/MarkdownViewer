@@ -33,13 +33,16 @@ namespace MarkdownViewer
                 return;
             }
 
+            MarkdownPath = args[0];
             ResourcesDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources");
-            Initialize(args[0]);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             MainForm = new frmMain();
+            BrowserState = BrowserStates.Previewing;
+            Initialize(MarkdownPath);
+
             Application.Run(MainForm);
         }
 
@@ -88,12 +91,11 @@ namespace MarkdownViewer
         internal static void Initialize(string path)
         {
             MarkdownPath = path;
-
             try
             {
                 Log(MarkdownPath, "Reading markdown file: {0}", MarkdownPath);
                 MarkdownText = File.ReadAllText(MarkdownPath);
-                MainForm.Text = MarkdownPath + " - Markdown Viewer";
+                MainForm.Text = Path.GetFileName(MarkdownPath) + " - Markdown Viewer";
             }
             catch (Exception ex)
             {

@@ -16,6 +16,7 @@ $(function () {
     $('#btnSaveAsMarkdown').on('click', saveAsMarkdown);
     $('#btnSaveAsPDF').on('click', printToPdf);
     $('#btnShowDevTools').on('click', showDevTools);
+    $('#btnAbout').on('click', showAbout);
     $('#btnCloseAlert').on('click', function () { $('#divAlert').fadeOut(); });
 
     window.alert = function (msg, type, selfCloseSeconds) {
@@ -37,7 +38,7 @@ $(function () {
 });
 
 function initialize() {
-    $('#h4MdPath').html(controller.markdownFileName);
+    $('#h4MdPath').html(controller.markdownPath);
     //Load the html converted from the markdown contained in Program.MarkdownText.
     $('#divContent').html(controller.getFormatted(controller.markdownText));
 
@@ -100,6 +101,16 @@ function printToPdf() {
 
 function showDevTools() {
     controller.showDevTools();
+}
+
+function showAbout() {
+    alert(`<img src="images\\Icon-sm.png" />&nbsp; &nbsp;
+          <strong style="color:#000;font-size:1.4em;">Markdown Viewer</strong>
+          <hr />
+          A clean and quick Markdown file viewer for Windows.
+          <br />
+          <hr />
+          <small style="font-size:7pt;">Created by Compute Software Solutions<sup>&copy; </sup></small>`, 'info', 5);
 }
 
 function fileWasChanged() {

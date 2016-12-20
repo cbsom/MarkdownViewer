@@ -14,7 +14,7 @@
     <!--<NAV_BAR>-->
     <nav class="navbar navbar-inverse navbar-fixed-top noprint">
         <div class="container-fluid">
-            <ul class="nav navbar-nav nav-tabs">
+            <ul class="nav navbar-nav nav-tabs" id="ulNavTabs">
                 <li><a role="presentation" id="btnShowFormatted" class="active"><i class="fa fa-eye" title="Show Formatted"></i> View</a></li>
                 <li><a role="presentation" id="btnEditMarkdown"><i class="fa fa-edit" title="Edit Markdown"></i> Edit</a></li>
             </ul>
@@ -40,6 +40,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a id="btnShowDevTools">Open Dev-Tools</a></li>
+                        <li><a id="btnAbout">About Markdown Viewer</a></li>
                     </ul>
                 </li>
             </ul>
@@ -47,7 +48,7 @@
     </nav>
     <!--</NAV_BAR>-->
     <img src="images\Icon.png" id="imgIcon" />
-    <div class="container">
+    <div id="divMain" class="container">
         <div class="row">
             <div class='col-xs-12' id="divContent">
                 <p class="bg-info">

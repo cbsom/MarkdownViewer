@@ -7,10 +7,11 @@
     body { padding-top: 100px; }
 }
 
+#ulNavTabs { margin-top: 5px; }
 .nav-tabs, .nav-tabs > li > a { border-bottom: 0; }
 .active, .active:hover { cursor: default; color: #666 !important; background-color: #fff !important; }
 #imgIcon { position: fixed; top: 120px; right: 20px; opacity: 0.1; z-index: 1000; }
-#h4MdPath { font-weight: bold; color: #aebcff; }
+#h4MdPath { font-weight: bold; color: #aebcff; margin-top: 20px; margin-left: 20px; }
 #divAlert { position: absolute; top: 40%; width: auto; box-shadow: 10px 10px 10px #888; display: none; }
 #divAlertMessage { font-size: 1.3em; }
 
