@@ -1,29 +1,9 @@
-# README #
+![](https://bitbucket.org/chaim_sommers/markdownviewer/avatar/128/?ts=1482246150) 
+# Markdown Viewer #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+**A clean, quick and simple Markdown viewer for Windows.**
 
-### What is this repository for? ###
+Internally, the Markdown is converted to HTML using [MarkdownSharp](https://code.google.com/archive/p/markdownsharp/), customized to format github style code blocks.
+The html is displayed in an internal Chromium browser - created with [CEFSharp](https://github.com/cefsharp/CefSharp).
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+The HTML is styled with [Bootstrap 3](http://getbootstrap.com/), and the code blocks are syntax highlighted with [SyntaxHighlighter](http://alexgorbatchev.com/SyntaxHighlighter/).
