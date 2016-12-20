@@ -1,4 +1,4 @@
-![](https://bitbucket.org/chaim_sommers/markdownviewer/avatar/128/?ts=1482246150) 
+![](https://bitbucket-assetroot.s3.amazonaws.com/c/photos/2016/Dec/20/161221880-5-markdownviewer-logo_avatar.png) 
 # Markdown Viewer #
 
 **A clean, quick and simple Markdown viewer for Windows.**
