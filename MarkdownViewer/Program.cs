@@ -32,6 +32,11 @@ namespace MarkdownViewer
                 Program.Log(null, "Usage: MarkdownViewer.exe filePath");
                 return;
             }
+            else if(!File.Exists(args[0]))
+            {
+                Program.Log(args[0], "The file does not exist.");
+                return;
+            }
 
             MarkdownPath = args[0];
             ResourcesDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources");
