@@ -10,8 +10,6 @@ namespace MarkdownViewer
         {
             model.Clear();
 
-            model.AddItem(CefMenuCommand.Print, "Print"); // Remove "View Source" option                
-            model.AddSeparator();
             if (Program.BrowserState == BrowserStates.Previewing)
             {
                 model.AddItem((CefMenuCommand)EditMarkdown, "Edit Markdown");
@@ -20,6 +18,16 @@ namespace MarkdownViewer
             {
                 model.AddItem((CefMenuCommand)ViewFormatted, "View Formatted");
             }
+            model.AddItem(CefMenuCommand.Print, "Print");
+            model.AddSeparator();
+            model.AddItem(CefMenuCommand.Copy, "Copy");
+            if (Program.BrowserState == BrowserStates.Editing)
+            {
+                model.AddItem(CefMenuCommand.Cut, "Cut");
+                model.AddItem(CefMenuCommand.Paste, "Paste");               
+            }
+            model.AddSeparator();            
+            model.AddItem(CefMenuCommand.Reload, "Reload File");            
         }
 
         public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)

@@ -1,4 +1,5 @@
 ﻿/// <reference path="jquery.js" />
+/// <reference path="simplemde.min.js" />
 
 const State_Previewing = 0;
 const State_Editing = 1;
@@ -25,7 +26,10 @@ $(function () {
             .removeClass('alert-success alert-info alert-warning alert-danger')
             .addClass(type && ['success', 'info', 'warning', 'danger'].indexOf(type.toString().toLowerCase()) > -1 ?
                 'alert-' + type : 'alert-info')
-            .css('left', parseInt(($('body').innerWidth() / 2) - ($('#divAlert').width() / 2)).toString() + 'px')
+            .css({
+                'left': parseInt(($('body').innerWidth() / 2) - ($('#divAlert').width() / 2)).toString() + 'px',
+                'zIndex': 1000
+            })
             .fadeIn();
         if (selfCloseSeconds) {
             window.setTimeout(function () {
@@ -54,13 +58,23 @@ function editMarkdown() {
         element: $("#txtEditor")[0],
         autoDownloadFontAwesome: false,
         initialValue: controller.markdownText,
-        forceSync: true
+        toolbar: [{
+            name: "save",
+            action: saveChanges,
+            className: "fa fa-floppy-o",
+            title: "Save Changes"
+        }, "|", "bold", "italic", "strikethrough", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "table", "|", "side-by-side"],
+        shortcuts: {
+            "saveChanges": "Ctrl-S"
+        }
     });
     window.simplemde.codemirror.on("change", function () {
         controller.markdownText = window.simplemde.value();
     });
+
     $('#btnEditMarkdown').addClass('active').off('click');
     $('#btnShowFormatted').removeClass('active').on('click', showFormatted);
+    $('#divMain').removeClass('container');
     controller.setBrowserState(State_Editing);
 }
 
@@ -69,9 +83,11 @@ function showFormatted() {
         controller.markdownText = window.simplemde.value();
     }
     initialize();
-    controller.setBrowserState(State_Previewing);
     $('#btnShowFormatted').addClass('active').off('click');
     $('#btnEditMarkdown').removeClass('active').on('click', editMarkdown);
+    $('#divMain').addClass('container');
+
+    controller.setBrowserState(State_Previewing);
 }
 
 function openFile() {
@@ -90,8 +106,22 @@ function saveAsHtml() {
     controller.saveHtml(html);
 }
 
+function getHtml(md) {
+    return controller.getHtml(md);
+}
+
 function saveAsMarkdown() {
     controller.saveAsMarkdown();
+}
+
+
+function saveChanges() {
+    if (controller.saveMarkdown()) {
+        alert('The file has been saved.', 'info', 2);
+    }
+    else {
+        alert('The file could not be saved at this time.', 'warning');
+    }
 }
 
 function printToPdf() {
@@ -113,10 +143,6 @@ function showAbout() {
           <small style="font-size:7pt;">Created by Compute Software Solutions<sup>&copy; </sup></small>`, 'info', 5);
 }
 
-function fileWasChanged() {
-    alert('file was changed!', 'warning', 5);
-}
-
 function fileWasDeleted() {
-    alert('file was deleted!', 'warning', 5);
+    alert('The Markdown file has been deleted!', 'warning', 5);
 }

@@ -55,6 +55,12 @@ namespace MarkdownViewer
             return Program.SaveMarkdown();
         }
 
+        public string GetHtml(string markdown)
+        {
+            Markdown md = new Markdown();
+            return md.Transform(markdown);
+        }
+
         public void SaveHtml(string html)
         {
             using (SaveFileDialog d = new SaveFileDialog()
@@ -214,11 +220,11 @@ namespace MarkdownViewer
                 };
                 this._fileSystemWatcher.Deleted += delegate (object sender, FileSystemEventArgs e)
                 {
-                    Program.MainForm.RunJavscript("fileWasDeleted()");
+                    Program.MainForm.RunJavscript("if(window.fileWasDeleted) fileWasDeleted();");
                 };
                 this._fileSystemWatcher.Changed += delegate (object sender, FileSystemEventArgs e)
                 {
-                    Program.MainForm.RunJavscript("fileWasChanged()");
+                    Program.MainForm.RunJavscript("if(window.fileWasChanged) fileWasChanged();");
                 };
             }
 
