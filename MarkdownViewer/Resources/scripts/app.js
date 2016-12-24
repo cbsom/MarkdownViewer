@@ -9,33 +9,6 @@ const State_Editing = 1;
 
 class MarkdownViewer {
     constructor() {
-        $('#btnEditMarkdown').on('click', () => this.editMarkdown());
-        $('#btnOpenMarkdown').on('click', () => this.openFile());
-        $('#btnSaveAsHtml').on('click', () => this.saveAsHtml());
-        $('#btnSaveAsMarkdown').on('click', () => this.saveAsMarkdown());
-        $('#btnSaveAsPDF').on('click', () => this.printToPdf());
-        $('#btnShowDevTools').on('click', () => this.showDevTools());
-        $('#btnAbout').on('click', () => this.showAbout());
-        $('#btnCloseAlert').on('click', () =>  $('#divAlert').fadeOut());
-
-        window.alert = function (msg, type, selfCloseSeconds) {
-            $('#divAlertMessage').html(msg);
-            $('#divAlert')
-                .removeClass('alert-success alert-info alert-warning alert-danger')
-                .addClass(type && ['success', 'info', 'warning', 'danger'].indexOf(type.toString().toLowerCase()) > -1 ?
-                    'alert-' + type : 'alert-info')
-                .css({
-                    'left': parseInt(($('body').innerWidth() / 2) - ($('#divAlert').width() / 2)).toString() + 'px',
-                    'zIndex': 1000
-                })
-                .fadeIn();
-            if (selfCloseSeconds) {
-                window.setTimeout(function () {
-                    $('#divAlert').fadeOut();
-                }, selfCloseSeconds * 1000);
-            }
-        }
-
         this.initialize();
     }
 
@@ -50,15 +23,20 @@ class MarkdownViewer {
     }
 
     editMarkdown() {
+        //The SimpleMDE component loves textareas
         $('#divContent').html('<textarea id="txtEditor"></textarea>');
 
+        //Now that we have a textarea for it to eat, we can create the SimpleMDE component
         this.createEditor();
 
         $('#btnEditMarkdown').addClass('active').off('click');
-        $('#btnShowFormatted').removeClass('active').on('click', () => this.showFormatted());
+        $('#btnShowFormatted').removeClass('active').one('click', () => this.showFormatted());
         $('#divMain').removeClass('container');
+
+        //The MenuHandler class customizes the right-click menu according to the current state.
         controller.setBrowserState(State_Editing);
 
+        //If the user was previously editing side-by-side before previewing, they probably want to go back to that.
         if (this.showingSideBySide === true) {
             this.showSideBySide(true);
         }
@@ -66,20 +44,27 @@ class MarkdownViewer {
 
     showFormatted() {
         if (this.simplemde) {
+            //We are changing from editing to viewing: copy the contents of the editor back into the controller.
+            //Note, this does not update the changes back to the physical file. Only controller.saveMarkdown() does that.
             controller.markdownText = this.simplemde.value();
         }
+        //We need to convert the markdown to html and load it into the page content.
         initialize();
+
         $('#btnShowFormatted').addClass('active').off('click');
-        $('#btnEditMarkdown').removeClass('active').on('click', () => this.editMarkdown());
+        $('#btnEditMarkdown').removeClass('active').one('click', () => this.editMarkdown());
         $('#divMain').addClass('container');
 
+        //The MenuHandler class customizes the right-click menu according to the current state.
         controller.setBrowserState(State_Previewing);
     }
 
+    //Open a different Markdown file
     openFile() {
         controller.openMarkdown();
     }
 
+    //Save the current Markdown as html
     saveAsHtml() {
         var html = `<!DOCTYPE html>
         <html>
@@ -91,23 +76,23 @@ class MarkdownViewer {
                     .replace(/<!--<NAV_BAR>-->[^]+<!--<\/NAV_BAR>-->/, '');
         controller.saveHtml(html);
     }
-
-    getHtml(md) {
-        return controller.getHtml(md);
-    }
-
+    
+    //Save the current Markdown file as...
     saveAsMarkdown() {
         controller.saveAsMarkdown();
     }
 
+    //Calls the browser components PrintToPdfAsync function
     printToPdf() {
         controller.printToPdf();
     }
 
+    //Show Chromes DevTools
     showDevTools() {
         controller.showDevTools();
     }
 
+    //You always need (at least) one of these
     showAbout() {
         alert(`<img src="images\\Icon-sm.png" />&nbsp; &nbsp;
           <strong style="color:#000;font-size:1.4em;">Markdown Viewer</strong>
@@ -118,10 +103,12 @@ class MarkdownViewer {
           <small style="font-size:7pt;">Created by Compute Software Solutions<sup>&copy; </sup></small>`, 'info', 5);
     }
 
+    //The PageController calls this function if the file we are viewing gets itself deleted.
     fileWasDeleted() {
         alert('The Markdown file has been deleted!', 'warning', 5);
     }
 
+    //Create a SimpleMDEeditor component - cooked the way we like it
     createEditor() {
         this.simplemde = new SimpleMDE({
             element: $("#txtEditor")[0],
@@ -153,11 +140,12 @@ class MarkdownViewer {
         });
     }
 
+    //The inbuilt SimpleMDE side-by-side button was having issues with something in our css
+    //so we need to do horrible, unsightly and unseemly hacks
     showSideBySide(show) {
         if (show === true || !this.simplemde.isSideBySideActive()) {
             this.simplemde.toggleSideBySide();
-            /*The inbuilt SimpleMDE side-by-side button was having issues with something in our css
-             * so we need to do horrible, unsightly and unseemly hacks ;) */
+            //De-ja-vu. Didn't we just do this? Yup. ugly hacks - such as this one.
             if (!this.simplemde.isSideBySideActive())
                 this.simplemde.toggleSideBySide();
 
@@ -167,9 +155,37 @@ class MarkdownViewer {
             this.simplemde.toggleSideBySide();
             this.showingSideBySide = false;
         }
-    }   
+    }
+}
+
+//Replace alert with a custom bootstrap styled one.
+window.alert = function (msg, type, selfCloseSeconds) {
+    $('#divAlertMessage').html(msg);
+    $('#divAlert')
+        .removeClass('alert-success alert-info alert-warning alert-danger')
+        .addClass(type && ['success', 'info', 'warning', 'danger'].indexOf(type.toString().toLowerCase()) > -1 ?
+            'alert-' + type.toLowerCase() : 'alert-info')
+        .css({
+            'left': parseInt(($('body').innerWidth() / 2) - ($('#divAlert').width() / 2)).toString() + 'px',
+            'zIndex': 1000
+        })
+        .fadeIn();
+    if (selfCloseSeconds) {
+        window.setTimeout(function () {
+            $('#divAlert').fadeOut();
+        }, selfCloseSeconds * 1000);
+    }
 }
 
 $(function () {
-    window.markdownViewer = new MarkdownViewer();
+    var mv = window.markdownViewer = new MarkdownViewer();
+
+    $('#btnEditMarkdown').on('click', () => mv.editMarkdown());
+    $('#btnOpenMarkdown').on('click', () => mv.openFile());
+    $('#btnSaveAsHtml').on('click', () => mv.saveAsHtml());
+    $('#btnSaveAsMarkdown').on('click', () => mv.saveAsMarkdown());
+    $('#btnSaveAsPDF').on('click', () => mv.printToPdf());
+    $('#btnShowDevTools').on('click', () => mv.showDevTools());
+    $('#btnAbout').on('click', () => mv.showAbout());
+    $('#btnCloseAlert').on('click', () =>  $('#divAlert').fadeOut());
 });

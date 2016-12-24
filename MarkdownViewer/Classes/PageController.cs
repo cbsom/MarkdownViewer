@@ -55,12 +55,6 @@ namespace MarkdownViewer
             return Program.SaveMarkdown();
         }
 
-        public string GetHtml(string markdown)
-        {
-            Markdown md = new Markdown();
-            return md.Transform(markdown);
-        }
-
         public void SaveHtml(string html)
         {
             using (SaveFileDialog d = new SaveFileDialog()
