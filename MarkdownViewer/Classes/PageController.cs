@@ -148,7 +148,7 @@ namespace MarkdownViewer
                     {
                         Program.Initialize(d.FileName);
                         this.SetUpFileWatcher();
-                        Program.MainForm.RunJavscript("initialize();");
+                        Program.MainForm.RunJavscript("window.markdownViewer.initialize();");
                     }
                 });
 
@@ -220,11 +220,11 @@ namespace MarkdownViewer
                 };
                 this._fileSystemWatcher.Deleted += delegate (object sender, FileSystemEventArgs e)
                 {
-                    Program.MainForm.RunJavscript("if(window.fileWasDeleted) fileWasDeleted();");
+                    Program.MainForm.RunJavscript("if(window.markdownViewer.fileWasDeleted) window.markdownViewer.fileWasDeleted();");
                 };
                 this._fileSystemWatcher.Changed += delegate (object sender, FileSystemEventArgs e)
                 {
-                    Program.MainForm.RunJavscript("if(window.fileWasChanged) fileWasChanged();");
+                    Program.MainForm.RunJavscript("if(window.markdownViewer.fileWasChanged) window.markdownViewer.fileWasChanged();");
                 };
             }
 

@@ -18,3 +18,8 @@
 /*Hide SyntaxHighlighter help links*/
 .syntaxhighlighter { overflow: visible !important; }
 .toolbar { visibility: hidden !important; }
+
+/*The SimpleMDE editor in side-by-side mode puts itself into fullscreen - 
+    which gets it's head hidden under the nav bar*/
+.editor-toolbar.fullscreen { top: 70px; }
+.CodeMirror-fullscreen, .editor-preview-side { top: 120px; }

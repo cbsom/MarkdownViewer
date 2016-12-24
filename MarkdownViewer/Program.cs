@@ -95,7 +95,7 @@ namespace MarkdownViewer
             {
                 Log(MarkdownPath, "Reading markdown file: {0}", MarkdownPath);
                 MarkdownText = File.ReadAllText(MarkdownPath);
-                MainForm.Text = Path.GetFileName(MarkdownPath) + " - Markdown Viewer";
+                MainForm.Text = MarkdownPath + " - Markdown Viewer";
             }
             catch (Exception ex)
             {
