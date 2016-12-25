@@ -2,9 +2,6 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Linq;
-using System.Collections.Generic;
-
 
 namespace MarkdownViewer
 {
@@ -13,17 +10,11 @@ namespace MarkdownViewer
     /// </summary>
     public class PageController
     {
-        private FileSystemWatcher _fileSystemWatcher;
         public string MarkdownPath { get { return Program.MarkdownPath; } }
 
         public string MarkdownFileName { get { return Path.GetFileName(Program.MarkdownPath); } }
 
         public string ResourcesDirectory { get { return Program.ResourcesDirectory; } }
-
-        public PageController()
-        {
-            this.SetUpFileWatcher();
-        }
 
         public string MarkdownText
         {
@@ -55,12 +46,6 @@ namespace MarkdownViewer
             return Program.SaveMarkdown();
         }
 
-        public string GetHtml(string markdown)
-        {
-            Markdown md = new Markdown();
-            return md.Transform(markdown);
-        }
-
         public void SaveHtml(string html)
         {
             using (SaveFileDialog d = new SaveFileDialog()
@@ -74,7 +59,8 @@ namespace MarkdownViewer
                 Title = "Save " + Path.GetFileName(Program.MarkdownPath) + " as..."
             })
             {
-                var doIt = new Action(() =>
+                //As this will be called from within the browser, it will be on another UI thread
+                Program.MainForm.Invoke(new Action(() =>
                 {
                     if (d.ShowDialog(Program.MainForm) == DialogResult.OK)
                     {
@@ -83,16 +69,7 @@ namespace MarkdownViewer
                             d.FileName.Replace(@"\", @"\\") +
                             @"\nhas been successfully created.');");
                     }
-                });
-
-                if (Program.MainForm.InvokeRequired)
-                {
-                    Program.MainForm.Invoke(doIt);
-                }
-                else
-                {
-                    doIt();
-                }
+                }));
             }
         }
 
@@ -109,7 +86,8 @@ namespace MarkdownViewer
                 Title = "Save " + Path.GetFileName(Program.MarkdownPath) + " as..."
             })
             {
-                var doIt = new Action(() =>
+                //As this will be called from within the browser, it will be on another UI thread
+                Program.MainForm.Invoke(new Action(() =>
                 {
                     if (d.ShowDialog(Program.MainForm) == DialogResult.OK)
                     {
@@ -118,16 +96,7 @@ namespace MarkdownViewer
                             d.FileName.Replace(@"\", @"\\") +
                             @"\nhas been successfully created.');");
                     }
-                });
-
-                if (Program.MainForm.InvokeRequired)
-                {
-                    Program.MainForm.Invoke(doIt);
-                }
-                else
-                {
-                    doIt();
-                }
+                }));
             }
         }
 
@@ -142,24 +111,14 @@ namespace MarkdownViewer
                 Title = "Open Markdown File"
             })
             {
-                var doIt = new Action(() =>
+                //As this will be called from within the browser, it will be on another UI thread
+                Program.MainForm.Invoke(new Action(() =>
                 {
                     if (d.ShowDialog() == DialogResult.OK)
                     {
-                        Program.Initialize(d.FileName);
-                        this.SetUpFileWatcher();
-                        Program.MainForm.RunJavscript("initialize();");
+                        Program.ChangeFile(d.FileName);
                     }
-                });
-
-                if (Program.MainForm.InvokeRequired)
-                {
-                    Program.MainForm.Invoke(doIt);
-                }
-                else
-                {
-                    doIt();
-                }
+                }));
             }
         }
 
@@ -181,7 +140,8 @@ namespace MarkdownViewer
                 Title = "Print to PDF  - " + Path.GetFileName(Program.MarkdownPath)
             })
             {
-                var doIt = new Action(() =>
+                //As this will be called from within the browser, it will be on another UI thread
+                Program.MainForm.Invoke(new Action(() =>
                 {
                     if (d.ShowDialog(Program.MainForm) == DialogResult.OK)
                     {
@@ -190,49 +150,13 @@ namespace MarkdownViewer
                             d.FileName.Replace(@"\", @"\\") +
                             @"\nhas been successfully created.');");
                     }
-                });
-
-                if (Program.MainForm.InvokeRequired)
-                {
-                    Program.MainForm.Invoke(doIt);
-                }
-                else
-                {
-                    doIt();
-                }
+                }));
             }
         }
 
         public void SetBrowserState(int state)
         {
             Program.BrowserState = (BrowserStates)state;
-        }
-
-        private void SetUpFileWatcher()
-        {
-            if (this._fileSystemWatcher == null)
-            {
-                this._fileSystemWatcher = new FileSystemWatcher()
-                {
-                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
-                    IncludeSubdirectories = false
-
-                };
-                this._fileSystemWatcher.Deleted += delegate (object sender, FileSystemEventArgs e)
-                {
-                    Program.MainForm.RunJavscript("if(window.fileWasDeleted) fileWasDeleted();");
-                };
-                this._fileSystemWatcher.Changed += delegate (object sender, FileSystemEventArgs e)
-                {
-                    Program.MainForm.RunJavscript("if(window.fileWasChanged) fileWasChanged();");
-                };
-            }
-
-            this._fileSystemWatcher.EnableRaisingEvents = false;
-            this._fileSystemWatcher.Path = Path.GetDirectoryName(this.MarkdownPath);
-            this._fileSystemWatcher.Filter = Path.GetFileName(this.MarkdownPath);
-
-            this._fileSystemWatcher.EnableRaisingEvents = true;
         }
     }
 }
