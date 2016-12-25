@@ -13,13 +13,19 @@ class MarkdownViewer {
     }
 
     initialize() {
-        $('#h4MdPath').html(controller.markdownFileName);
-        //Load the html converted from the markdown contained in Program.MarkdownText.
-        $('#divContent').html(controller.getFormatted(controller.markdownText));
+        if (!!controller.markdownFileName) {
+            $('#h4MdPath').html(controller.markdownFileName);
+            //Load the html converted from the markdown contained in Program.MarkdownText.
+            $('#divContent').html(controller.getFormatted(controller.markdownText));
+            $('#btnEditMarkdown').on('click', () => this.editMarkdown());
 
-        //The html has loaded onto the page. We can now format the code sections.
-        window.loadBrushes();
-        SyntaxHighlighter.all();
+            //The html has loaded onto the page. We can now format the code sections.
+            window.loadBrushes();
+            SyntaxHighlighter.all();
+        }
+        else {
+            $('#pNoFile').show();            
+        }
     }
 
     editMarkdown() {
@@ -49,7 +55,7 @@ class MarkdownViewer {
             controller.markdownText = this.simplemde.value();
         }
         //We need to convert the markdown to html and load it into the page content.
-        initialize();
+        this.initialize();
 
         $('#btnShowFormatted').addClass('active').off('click');
         $('#btnEditMarkdown').removeClass('active').one('click', () => this.editMarkdown());
@@ -76,7 +82,7 @@ class MarkdownViewer {
                     .replace(/<!--<NAV_BAR>-->[^]+<!--<\/NAV_BAR>-->/, '');
         controller.saveHtml(html);
     }
-    
+
     //Save the current Markdown file as...
     saveAsMarkdown() {
         controller.saveAsMarkdown();
@@ -180,8 +186,8 @@ window.alert = function (msg, type, selfCloseSeconds) {
 $(function () {
     var mv = window.markdownViewer = new MarkdownViewer();
 
-    $('#btnEditMarkdown').on('click', () => mv.editMarkdown());
     $('#btnOpenMarkdown').on('click', () => mv.openFile());
+    $('#btnOpenMarkdown2').on('click', () => mv.openFile());
     $('#btnSaveAsHtml').on('click', () => mv.saveAsHtml());
     $('#btnSaveAsMarkdown').on('click', () => mv.saveAsMarkdown());
     $('#btnSaveAsPDF').on('click', () => mv.printToPdf());

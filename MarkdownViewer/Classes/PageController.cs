@@ -22,7 +22,10 @@ namespace MarkdownViewer
 
         public PageController()
         {
-            this.SetUpFileWatcher();
+            if ((!string.IsNullOrEmpty(Program.MarkdownPath)) && File.Exists(Program.MarkdownPath))
+            {
+                this.SetUpFileWatcher();
+            }
         }
 
         public string MarkdownText

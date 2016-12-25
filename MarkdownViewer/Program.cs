@@ -27,13 +27,10 @@ namespace MarkdownViewer
         static void Main(string[] args)
         {
             Program.Log(null, "Starting MarkdownViewer.exe " + string.Join(" ", args));
-            if (args.Length < 1)
+            if (args.Length > 0)
             {
-                Program.Log(null, "Usage: MarkdownViewer.exe filePath");
-                return;
+                MarkdownPath = args[0];
             }
-
-            MarkdownPath = args[0];
             ResourcesDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources");
 
             Application.EnableVisualStyles();
@@ -41,7 +38,10 @@ namespace MarkdownViewer
 
             MainForm = new frmMain();
             BrowserState = BrowserStates.Previewing;
-            Initialize(MarkdownPath);
+            if (!string.IsNullOrEmpty(MarkdownPath))
+            {
+                Initialize(MarkdownPath);
+            }
 
             Application.Run(MainForm);
         }
