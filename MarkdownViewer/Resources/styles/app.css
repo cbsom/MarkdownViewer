@@ -7,9 +7,17 @@
     body { padding-top: 100px; }
 }
 
+@media(min-width: 768px) {
+    .navbar-nav > li > a { padding-top: 16px; padding-bottom: 15px; }
+}
+
+a { cursor: pointer; }
+
+nav.navbar {min-width:780px; }
 #ulNavTabs { margin-top: 5px; }
-.nav-tabs, .nav-tabs > li > a { border-bottom: 0; }
-.active, .active:hover { cursor: default; color: #000 !important; background: linear-gradient(#558, #cce, #fff) !important; }
+.nav-tabs, .nav-tabs > li > a { border: 0; }
+
+.active, .active:hover { cursor: default; color: #000 !important; background: linear-gradient(#222, #ccc, #fff) !important; }
 #imgIcon { position: fixed; top: 120px; right: 20px; opacity: 0.1; z-index: 1000; }
 #h4MdPath { font-weight: bold; color: #aebcff; margin-top: 20px; margin-left: 20px; }
 #divAlert { position: absolute; top: 40%; width: auto; box-shadow: 10px 10px 10px #888; display: none; }
@@ -19,7 +27,7 @@
 .syntaxhighlighter { overflow: visible !important; }
 .toolbar { visibility: hidden !important; }
 
-/*The SimpleMDE editor in side-by-side mode puts itself into fullscreen - 
+/*The SimpleMDE editor in side-by-side mode puts itself into fullscreen -
     which gets it's head hidden under the nav bar*/
 .editor-toolbar.fullscreen { top: 70px; }
 .CodeMirror-fullscreen, .editor-preview-side { top: 120px; }
