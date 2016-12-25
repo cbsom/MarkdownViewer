@@ -3,8 +3,10 @@ namespace MarkdownViewer
 {
     internal class MenuHandler : IContextMenuHandler
     {
-        private const int EditMarkdown = 26501;
-        private const int ViewFormatted = 26502;
+        private const CefMenuCommand EditMarkdown = (CefMenuCommand)26501;
+        private const CefMenuCommand ViewFormatted = (CefMenuCommand)26502;
+        private const CefMenuCommand SaveChanges = (CefMenuCommand)26503;
+        private const CefMenuCommand ViewSideBySide = (CefMenuCommand)26504;
 
         void IContextMenuHandler.OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
         {
@@ -16,29 +18,41 @@ namespace MarkdownViewer
             }
             else if (Program.BrowserState == BrowserStates.Editing)
             {
+                model.AddItem((CefMenuCommand)SaveChanges, "Save Changes");
+                model.AddSeparator();
                 model.AddItem((CefMenuCommand)ViewFormatted, "View Formatted");
+                model.AddItem((CefMenuCommand)ViewSideBySide, "Edit and View Side-By-Side");
             }
+            model.AddSeparator();
             model.AddItem(CefMenuCommand.Print, "Print");
             model.AddSeparator();
             model.AddItem(CefMenuCommand.Copy, "Copy");
             if (Program.BrowserState == BrowserStates.Editing)
             {
                 model.AddItem(CefMenuCommand.Cut, "Cut");
-                model.AddItem(CefMenuCommand.Paste, "Paste");               
+                model.AddItem(CefMenuCommand.Paste, "Paste");
             }
-            model.AddSeparator();            
-            model.AddItem(CefMenuCommand.Reload, "Reload File");            
+            model.AddSeparator();
+            model.AddItem(CefMenuCommand.Reload, "Reload File");
+
         }
 
         public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
         {
-            if (commandId == (CefMenuCommand)EditMarkdown)
+            switch (commandId)
             {
-                browser.MainFrame.ExecuteJavaScriptAsync("editMarkdown();");
-            }
-            else if (commandId == (CefMenuCommand)ViewFormatted)
-            {
-                browser.MainFrame.ExecuteJavaScriptAsync("showFormatted();");
+                case EditMarkdown:
+                    browser.MainFrame.ExecuteJavaScriptAsync("window.markdownViewer.editMarkdown();");
+                    break;
+                case ViewFormatted:
+                    browser.MainFrame.ExecuteJavaScriptAsync("window.markdownViewer.showFormatted();");
+                    break;
+                case SaveChanges:
+                    browser.MainFrame.ExecuteJavaScriptAsync("window.markdownViewer.saveChanges();");
+                    break;
+                case ViewSideBySide:
+                    browser.MainFrame.ExecuteJavaScriptAsync("window.markdownViewer.showSideBySide(true);");
+                    break;
             }
 
             return false;

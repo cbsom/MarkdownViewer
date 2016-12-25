@@ -119,14 +119,7 @@ class MarkdownViewer {
             initialValue: controller.markdownText,
             toolbar: [{
                 name: "save",
-                action: function () {
-                    if (controller.saveMarkdown()) {
-                        alert('The file has been saved.', 'info', 2);
-                    }
-                    else {
-                        alert('The file could not be saved at this time.', 'warning');
-                    }
-                },
+                action: (() => this.saveChanges()),
                 className: "fa fa-floppy-o",
                 title: "Save Changes"
             },
@@ -141,6 +134,15 @@ class MarkdownViewer {
         this.simplemde.codemirror.on("change", function () {
             controller.markdownText = this.simplemde.value();
         });
+    }
+
+    saveChanges() {
+        if (controller.saveMarkdown()) {
+            alert('The file has been saved.', 'info', 2);
+        }
+        else {
+            alert('The file could not be saved at this time.', 'warning');
+        }
     }
 
     //The inbuilt SimpleMDE side-by-side button was having issues with something in our css
