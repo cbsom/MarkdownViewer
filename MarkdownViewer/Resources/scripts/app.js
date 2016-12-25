@@ -23,9 +23,6 @@ class MarkdownViewer {
             window.loadBrushes();
             SyntaxHighlighter.all();
         }
-        else {
-            $('#pNoFile').show();            
-        }
     }
 
     editMarkdown() {

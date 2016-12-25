@@ -23,6 +23,8 @@ namespace MarkdownViewer
 
         internal static BrowserStates BrowserState { get; set; }
 
+        private static FileSystemWatcher _fileSystemWatcher;
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -41,6 +43,7 @@ namespace MarkdownViewer
             if (!string.IsNullOrEmpty(MarkdownPath))
             {
                 Initialize(MarkdownPath);
+                SetUpFileWatcher(MarkdownPath);
             }
 
             Application.Run(MainForm);
@@ -88,7 +91,25 @@ namespace MarkdownViewer
                 string.Format(message, args));
         }
 
-        internal static void Initialize(string path)
+        internal static void ChangeFile(string path)
+        {
+            var doIt = new Action(() =>
+            {
+                Initialize(path);
+                SetUpFileWatcher(MarkdownPath);
+                MainForm.RunJavscript("window.markdownViewer.initialize();");
+            });
+            if (Program.MainForm.InvokeRequired)
+            {
+                Program.MainForm.Invoke(doIt);
+            }
+            else
+            {
+                doIt();
+            }
+        }
+
+        private static void Initialize(string path)
         {
             MarkdownPath = path;
             try
@@ -109,5 +130,32 @@ namespace MarkdownViewer
                 return;
             }
         }
+
+        private static void SetUpFileWatcher(string mdPath)
+        {
+            if (_fileSystemWatcher == null)
+            {
+                _fileSystemWatcher = new FileSystemWatcher()
+                {
+                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
+                    IncludeSubdirectories = false
+
+                };
+                _fileSystemWatcher.Deleted += delegate (object sender, FileSystemEventArgs e)
+                {
+                    MainForm.RunJavscript("if(window.markdownViewer.fileWasDeleted) window.markdownViewer.fileWasDeleted();");
+                };
+                _fileSystemWatcher.Changed += delegate (object sender, FileSystemEventArgs e)
+                {
+                    MainForm.RunJavscript("if(window.markdownViewer.fileWasChanged) window.markdownViewer.fileWasChanged();");
+                };
+            }
+
+            _fileSystemWatcher.EnableRaisingEvents = false;
+            _fileSystemWatcher.Path = Path.GetDirectoryName(mdPath);
+            _fileSystemWatcher.Filter = Path.GetFileName(mdPath);
+
+            _fileSystemWatcher.EnableRaisingEvents = true;
+        }        
     }
 }

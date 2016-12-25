@@ -14,7 +14,6 @@
 #h4MdPath { font-weight: bold; color: #aebcff; margin-top: 20px; margin-left: 20px; }
 #divAlert { position: absolute; top: 40%; width: auto; box-shadow: 10px 10px 10px #888; display: none; }
 #divAlertMessage { font-size: 1.3em; }
-#pNoFile {display:none; }
 
 /*Hide SyntaxHighlighter help links*/
 .syntaxhighlighter { overflow: visible !important; }
