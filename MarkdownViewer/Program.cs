@@ -23,22 +23,16 @@ namespace MarkdownViewer
 
         internal static BrowserStates BrowserState { get; set; }
 
+        private static FileSystemWatcher _fileSystemWatcher;
+
         [STAThread]
         static void Main(string[] args)
         {
             Program.Log(null, "Starting MarkdownViewer.exe " + string.Join(" ", args));
-            if (args.Length < 1)
+            if (args.Length > 0)
             {
-                Program.Log(null, "Usage: MarkdownViewer.exe filePath");
-                return;
+                MarkdownPath = args[0];
             }
-            else if(!File.Exists(args[0]))
-            {
-                Program.Log(args[0], "The file does not exist.");
-                return;
-            }
-
-            MarkdownPath = args[0];
             ResourcesDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Resources");
 
             Application.EnableVisualStyles();
@@ -46,7 +40,11 @@ namespace MarkdownViewer
 
             MainForm = new frmMain();
             BrowserState = BrowserStates.Previewing;
-            Initialize(MarkdownPath);
+            if (!string.IsNullOrEmpty(MarkdownPath))
+            {
+                Initialize(MarkdownPath);
+                SetUpFileWatcher(MarkdownPath);
+            }
 
             Application.Run(MainForm);
         }
@@ -93,14 +91,32 @@ namespace MarkdownViewer
                 string.Format(message, args));
         }
 
-        internal static void Initialize(string path)
+        internal static void ChangeFile(string path)
+        {
+            var doIt = new Action(() =>
+            {
+                Initialize(path);
+                SetUpFileWatcher(MarkdownPath);
+                MainForm.RunJavscript("window.markdownViewer.initialize();");
+            });
+            if (Program.MainForm.InvokeRequired)
+            {
+                Program.MainForm.Invoke(doIt);
+            }
+            else
+            {
+                doIt();
+            }
+        }
+
+        private static void Initialize(string path)
         {
             MarkdownPath = path;
             try
             {
                 Log(MarkdownPath, "Reading markdown file: {0}", MarkdownPath);
                 MarkdownText = File.ReadAllText(MarkdownPath);
-                MainForm.Text = Path.GetFileName(MarkdownPath) + " - Markdown Viewer";
+                MainForm.Text = MarkdownPath + " - Markdown Viewer";
             }
             catch (Exception ex)
             {
@@ -114,5 +130,32 @@ namespace MarkdownViewer
                 return;
             }
         }
+
+        private static void SetUpFileWatcher(string mdPath)
+        {
+            if (_fileSystemWatcher == null)
+            {
+                _fileSystemWatcher = new FileSystemWatcher()
+                {
+                    NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
+                    IncludeSubdirectories = false
+
+                };
+                _fileSystemWatcher.Deleted += delegate (object sender, FileSystemEventArgs e)
+                {
+                    MainForm.RunJavscript("if(window.markdownViewer.fileWasDeleted) window.markdownViewer.fileWasDeleted();");
+                };
+                _fileSystemWatcher.Changed += delegate (object sender, FileSystemEventArgs e)
+                {
+                    MainForm.RunJavscript("if(window.markdownViewer.fileWasChanged) window.markdownViewer.fileWasChanged();");
+                };
+            }
+
+            _fileSystemWatcher.EnableRaisingEvents = false;
+            _fileSystemWatcher.Path = Path.GetDirectoryName(mdPath);
+            _fileSystemWatcher.Filter = Path.GetFileName(mdPath);
+
+            _fileSystemWatcher.EnableRaisingEvents = true;
+        }        
     }
 }
