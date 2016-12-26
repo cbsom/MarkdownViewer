@@ -26,13 +26,15 @@ namespace MarkdownViewer
             model.AddSeparator();
             model.AddItem(CefMenuCommand.Print, "Print");
             model.AddSeparator();
+            model.AddItem(CefMenuCommand.Find, "Find");
+            model.AddSeparator();
             model.AddItem(CefMenuCommand.Copy, "Copy");
             if (Program.BrowserState == BrowserStates.Editing)
             {
                 model.AddItem(CefMenuCommand.Cut, "Cut");
                 model.AddItem(CefMenuCommand.Paste, "Paste");
             }
-            model.AddSeparator();
+            model.AddSeparator();            
             model.AddItem(CefMenuCommand.Reload, "Reload File");
 
         }
