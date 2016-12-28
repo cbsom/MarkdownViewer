@@ -158,5 +158,14 @@ namespace MarkdownViewer
         {
             Program.BrowserState = (BrowserStates)state;
         }
+
+        public void ToggleFind()
+        {
+            //As this will be called from within the browser, it will be on another UI thread
+            Program.MainForm.Invoke(new Action(() =>
+            {
+                Program.MainForm.ToggleFind();
+            }));
+        }
     }
 }

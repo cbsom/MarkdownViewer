@@ -13,7 +13,7 @@
 
 a { cursor: pointer; }
 
-nav.navbar {min-width:780px; }
+nav.navbar { min-width: 780px; }
 #ulNavTabs { margin-top: 5px; }
 .nav-tabs, .nav-tabs > li > a { border: 0; }
 

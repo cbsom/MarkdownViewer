@@ -161,6 +161,10 @@ class MarkdownViewer {
             this.showingSideBySide = false;
         }
     }
+
+    find() {
+        controller.toggleFind();
+    }
 }
 
 //Replace alert with a custom bootstrap styled one.
@@ -193,4 +197,5 @@ $(function () {
     $('#btnShowDevTools').on('click', () => mv.showDevTools());
     $('#btnAbout').on('click', () => mv.showAbout());
     $('#btnCloseAlert').on('click', () =>  $('#divAlert').fadeOut());
+    $('#btnFind').on('click', () =>  mv.find());
 });

@@ -32,6 +32,31 @@ namespace MarkdownViewer
             }
         }
 
+        internal void ToggleFind()
+        {
+            if (this._browser != null)
+            {
+                if (this.pnlFind.Visible)
+                {
+                    this.pnlFind.Visible = false;
+                    this._browser.StopFinding(true);
+                }
+                else
+                {
+                    this.pnlFind.Visible = true;
+                    this.pnlFind.Focus();
+                    this.txtFind.Focus();
+
+                    if (!string.IsNullOrEmpty(this.txtFind.Text))
+                    {
+                        this._browser.Invoke(new Action(() =>
+                            this._browser.Find(0, this.txtFind.Text, true, false, false)));
+                        this.txtFind.SelectAll();
+                    }
+                }
+            }
+        }
+
         internal void ShowDevTools()
         {
             if (this._browser != null)
@@ -62,6 +87,47 @@ namespace MarkdownViewer
                 {
                     doIt();
                 }
+            }
+        }
+
+        private void txtFind_TextChanged(object sender, EventArgs e)
+        {
+            if (this._browser != null)
+            {
+                this._browser.Invoke(new Action(() =>
+                {
+                    this._browser.StopFinding(false);
+                    this._browser.Find(0, this.txtFind.Text, true, false, false);
+                }));
+            }
+        }
+
+        private void btnNextSearch_Click(object sender, EventArgs e)
+        {
+            if (!this.pnlFind.Visible)
+            {
+                this.ToggleFind();
+            }
+            this._browser.Invoke(new Action(() =>
+            {
+                this._browser.Find(0, this.txtFind.Text, true, false, true);
+            }));
+        }
+
+        private void frmMain_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.F3:
+                    this.btnNextSearch.PerformClick();
+                    break;
+                case Keys.Escape:
+                    if (this._browser != null)
+                    {
+                        this._browser.Invoke(new Action(() => this._browser.StopFinding(true)));
+                    }
+                    this.pnlFind.Visible = false;
+                    break;
             }
         }
     }

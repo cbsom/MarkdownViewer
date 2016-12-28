@@ -208,6 +208,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
+    <None Include="Resources\fa-search.png" />
+    <None Include="Resources\fa-arrow-circle-right.png" />
     <Content Include="Resources\fonts\fontawesome-webfont.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -61,18 +61,41 @@ namespace MarkdownViewer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fa_arrow_circle_right {
+            get {
+                object obj = ResourceManager.GetObject("fa-arrow-circle-right", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap fa_search {
+            get {
+                object obj = ResourceManager.GetObject("fa-search", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;!DOCTYPE html&gt;
         ///&lt;html&gt;
         ///&lt;head&gt;
-        ///    &lt;title&gt;{{{TITLE}}}&lt;/title&gt;
-        ///    &lt;meta http-equiv=&quot;Content-type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;
+        ///    &lt;title&gt;Markdown Viewer&lt;/title&gt;
         ///    &lt;meta charset=&quot;utf-8&quot; /&gt;
-        ///    &lt;meta name=&quot;robots&quot; content=&quot;noindex, nofollow&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;cache-control&quot; content=&quot;max-age=0&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;cache-control&quot; content=&quot;no-cache&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;expires&quot; content=&quot;0&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;expires&quot; content=&quot;Tue, 01 Jan 1980 1:00:00 GMT&quot; /&gt;
-        ///    &lt;meta http-equiv=&quot;pragma&quot; content=&quot;no-ca [rest of string was truncated]&quot;;.
+        ///    &lt;link href=&quot;styles\bootstrap.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link href=&quot;styles\shCore.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link href=&quot;styles\shCoreDefault.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link href=&quot;styles\simplemde.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link href=&quot;styles\font-awesome.min.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///    &lt;link href=&quot;styles\app.css&quot; rel=&quot;stylesheet&quot; /&gt;
+        ///&lt;/head&gt;
+        ///&lt;body&gt;
+        ///    &lt;!--&lt;NAV_BAR&gt;--&gt;
+        ///    &lt;nav c [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string HTML_TEMPLATE {
             get {
