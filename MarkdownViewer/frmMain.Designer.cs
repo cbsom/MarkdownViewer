@@ -73,15 +73,19 @@
             // 
             // txtFind
             // 
+            this.txtFind.AcceptsReturn = true;
+            this.txtFind.AcceptsTab = true;
             this.txtFind.BackColor = System.Drawing.Color.White;
             this.txtFind.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtFind.Font = new System.Drawing.Font("Arial", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFind.ForeColor = System.Drawing.Color.Gray;
             this.txtFind.Location = new System.Drawing.Point(31, 7);
+            this.txtFind.Multiline = true;
             this.txtFind.Name = "txtFind";
-            this.txtFind.Size = new System.Drawing.Size(232, 23);
+            this.txtFind.Size = new System.Drawing.Size(232, 22);
             this.txtFind.TabIndex = 0;
             this.txtFind.TextChanged += new System.EventHandler(this.txtFind_TextChanged);
+            this.txtFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtFind_KeyUp);
             // 
             // frmMain
             // 
@@ -91,12 +95,10 @@
             this.ClientSize = new System.Drawing.Size(1204, 730);
             this.Controls.Add(this.pnlFind);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(1061, 47);
             this.Name = "frmMain";
             this.Text = "Markdown Viewer";
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.frmMain_KeyUp);
             this.pnlFind.ResumeLayout(false);
             this.pnlFind.PerformLayout();
             this.ResumeLayout(false);

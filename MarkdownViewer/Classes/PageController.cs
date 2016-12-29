@@ -167,5 +167,14 @@ namespace MarkdownViewer
                 Program.MainForm.ToggleFind();
             }));
         }
+
+        public void DoKeyUp(int keyCode, bool control, bool shift, bool alt, string selectedText)
+        {
+            //As this will be called from within the browser, it will be on another UI thread
+            Program.MainForm.Invoke(new Action(() =>
+            {
+                Program.MainForm.DoKeyUp((Keys)keyCode, control, shift, alt, selectedText);
+            }));
+        }
     }
 }

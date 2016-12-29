@@ -165,6 +165,18 @@ class MarkdownViewer {
     find() {
         controller.toggleFind();
     }
+
+    doKeyUp(evt) {
+        var keyCode = evt.keyCode,
+            ctrlKey = evt.ctrlKey,
+            shiftKey = evt.shiftKey,
+            altKey = evt.altKey,
+            selectedText = window.getSelection().toString();
+        console.log(keyCode, ctrlKey, shiftKey, altKey, selectedText);
+        window.setTimeout(function () {
+           controller.doKeyUp(keyCode, ctrlKey, shiftKey, altKey, selectedText);
+        }, 5);
+    }
 }
 
 //Replace alert with a custom bootstrap styled one.
@@ -198,4 +210,5 @@ $(function () {
     $('#btnAbout').on('click', () => mv.showAbout());
     $('#btnCloseAlert').on('click', () =>  $('#divAlert').fadeOut());
     $('#btnFind').on('click', () =>  mv.find());
+    $('body').on('keyup', function (e) { mv.doKeyUp(e); });
 });
