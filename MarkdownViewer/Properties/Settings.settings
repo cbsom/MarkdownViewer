@@ -5,5 +5,11 @@
     <Setting Name="HtmlTemplateFilePath" Type="System.String" Scope="User">
       <Value Profile="(Default)">{{{RESOURCES_DIRECTORY}}}\HTML_TEMPLATE.html</Value>
     </Setting>
+    <Setting Name="MarkdownGuideFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{{{RESOURCES_DIRECTORY}}}\MarkdownGuide.html</Value>
+    </Setting>
+    <Setting Name="MarkDownGuideURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://nextstepwebs.github.io/simplemde-markdown-editor/markdown-guide</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

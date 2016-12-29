@@ -1,5 +1,6 @@
 ﻿using MarkdownSharp;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 
@@ -125,6 +126,17 @@ namespace MarkdownViewer
         public void ShowDevTools()
         {
             Program.MainForm.ShowDevTools();
+        }
+
+        public void ShowGuide()
+        {
+            var mdPath = Properties.Settings.Default.MarkdownGuideFile.Replace(
+                "{{{RESOURCES_DIRECTORY}}}", Program.ResourcesDirectory);
+            if (!File.Exists(mdPath))
+            {
+                mdPath = Properties.Settings.Default.MarkDownGuideURL;
+            }
+            Process.Start(mdPath);
         }
 
         public void PrintToPdf()

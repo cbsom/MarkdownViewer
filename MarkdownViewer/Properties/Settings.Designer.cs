@@ -34,5 +34,29 @@ namespace MarkdownViewer.Properties {
                 this["HtmlTemplateFilePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{{{RESOURCES_DIRECTORY}}}\\MarkdownGuide.html")]
+        public string MarkdownGuideFile {
+            get {
+                return ((string)(this["MarkdownGuideFile"]));
+            }
+            set {
+                this["MarkdownGuideFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://nextstepwebs.github.io/simplemde-markdown-editor/markdown-guide")]
+        public string MarkDownGuideURL {
+            get {
+                return ((string)(this["MarkDownGuideURL"]));
+            }
+            set {
+                this["MarkDownGuideURL"] = value;
+            }
+        }
     }
 }

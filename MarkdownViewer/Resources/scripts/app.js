@@ -129,7 +129,13 @@ class MarkdownViewer {
                 action: (() => this.showSideBySide()),
                 className: "fa fa-columns",
                 title: "Side by Side Editing"
-            }, "|"]
+            }, "|",
+            {
+                name: "guide",
+                action: (() => this.showGuide()),
+                className: "fa fa-question-circle",
+                title: "Markdown Guide"
+            }]
         });
         this.simplemde.codemirror.on("change", function () {
             controller.markdownText = this.simplemde.value();
@@ -162,6 +168,10 @@ class MarkdownViewer {
         }
     }
 
+    showGuide() {
+        controller.showGuide();
+    }
+
     find() {
         controller.toggleFind();
     }
@@ -174,7 +184,7 @@ class MarkdownViewer {
             selectedText = window.getSelection().toString();
         console.log(keyCode, ctrlKey, shiftKey, altKey, selectedText);
         window.setTimeout(function () {
-           controller.doKeyUp(keyCode, ctrlKey, shiftKey, altKey, selectedText);
+            controller.doKeyUp(keyCode, ctrlKey, shiftKey, altKey, selectedText);
         }, 5);
     }
 }

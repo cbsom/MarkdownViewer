@@ -84,7 +84,6 @@ namespace MarkdownViewer
         {
             this.NextMatch();
         }
-
         #endregion
 
         #region private functions
