@@ -4,11 +4,15 @@
  as an instance of the MarkdownViewer.PageController class.
 *******************************************************************************************************/
 'use strict';
+const global = this;
 const State_Previewing = 0;
 const State_Editing = 1;
 
 class MarkdownViewer {
-    constructor() {
+    constructor(global) {
+        this.global = global;        
+        this.showingSideBySide = false;
+        this.state = State_Previewing;
         this.initialize();
     }
 
@@ -20,12 +24,22 @@ class MarkdownViewer {
             $('#btnEditMarkdown').on('click', () => this.editMarkdown());
 
             //The html has loaded onto the page. We can now format the code sections.
-            window.loadBrushes();
-            SyntaxHighlighter.all();
+            this.global.loadBrushes();
+            SyntaxHighlighter.all();            
+
+            //If this function is being called by the controller, for example if a new file is being opened, 
+            //we want to make sure that we show the html preview - even if the user was in middle of editing the original file.
+            if (this.state !== State_Previewing) {
+                this.showFormatted();
+            }
         }
     }
 
     editMarkdown() {
+        //The MenuHandler class customizes the right-click menu according to the current state.
+        controller.setBrowserState(State_Editing);
+        this.state = State_Editing;
+
         //The SimpleMDE component loves textareas
         $('#divContent').html('<textarea id="txtEditor"></textarea>');
 
@@ -36,20 +50,26 @@ class MarkdownViewer {
         $('#btnShowFormatted').removeClass('active').one('click', () => this.showFormatted());
         $('#divMain').removeClass('container');
 
-        //The MenuHandler class customizes the right-click menu according to the current state.
-        controller.setBrowserState(State_Editing);
 
         //If the user was previously editing side-by-side before previewing, they probably want to go back to that.
         if (this.showingSideBySide === true) {
             this.showSideBySide(true);
-        }
+        }        
     }
 
     showFormatted() {
+        //The MenuHandler class customizes the right-click menu according to the current state.
+        controller.setBrowserState(State_Previewing);
+        this.state = State_Previewing;
+
         if (this.simplemde) {
             //We are changing from editing to viewing: copy the contents of the editor back into the controller.
             //Note, this does not update the changes back to the physical file. Only controller.saveMarkdown() does that.
             controller.markdownText = this.simplemde.value();
+
+            if (this.simplemde.isFullscreenActive()) {
+                this.simplemde.toggleFullScreen();
+            }
         }
         //We need to convert the markdown to html and load it into the page content.
         this.initialize();
@@ -58,8 +78,8 @@ class MarkdownViewer {
         $('#btnEditMarkdown').removeClass('active').one('click', () => this.editMarkdown());
         $('#divMain').addClass('container');
 
-        //The MenuHandler class customizes the right-click menu according to the current state.
-        controller.setBrowserState(State_Previewing);
+        //Due to an issue with the simplemde side-by-side functionality, the body sometimes stays overflow:hidden even after the side-by-side is closed
+        $('body').css('overflow', 'auto');
     }
 
     //Open a different Markdown file
@@ -123,7 +143,8 @@ class MarkdownViewer {
                 className: "fa fa-floppy-o",
                 title: "Save Changes"
             },
-            "|", "bold", "italic", "strikethrough", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "table", "|",
+            //The fullscreen button will be hidden by the css. It was only added here to prevent errors in the side-by-side button
+            "|", "bold", "italic", "strikethrough", "heading", "|", "quote", "unordered-list", "ordered-list", "|", "link", "image", "table", "fullscreen", "|",
             {
                 name: "side-by-side",
                 action: (() => this.showSideBySide()),
@@ -151,20 +172,15 @@ class MarkdownViewer {
         }
     }
 
-    //The inbuilt SimpleMDE side-by-side button was having issues with something in our css
-    //so we need to do horrible, unsightly and unseemly hacks
     showSideBySide(show) {
-        if (show === true || !this.simplemde.isSideBySideActive()) {
+        this.showingSideBySide = show || !this.simplemde.isSideBySideActive();
+        if (typeof show === 'undefined' || show !== this.simplemde.isSideBySideActive()) {
             this.simplemde.toggleSideBySide();
-            //De-ja-vu. Didn't we just do this? Yup. ugly hacks - such as this one.
-            if (!this.simplemde.isSideBySideActive())
-                this.simplemde.toggleSideBySide();
-
-            this.showingSideBySide = true;
         }
-        else {
+
+        //There are some issues with the simplemde side-by-side code.
+        if (this.showingSideBySide && (!this.simplemde.isSideBySideActive())) {
             this.simplemde.toggleSideBySide();
-            this.showingSideBySide = false;
         }
     }
 
@@ -181,38 +197,36 @@ class MarkdownViewer {
             ctrlKey = evt.ctrlKey,
             shiftKey = evt.shiftKey,
             altKey = evt.altKey,
-            selectedText = window.getSelection().toString();
-        console.log(keyCode, ctrlKey, shiftKey, altKey, selectedText);
-        window.setTimeout(function () {
+            selectedText = this.global.getSelection().toString();
+        this.global.setTimeout(function () {
             controller.doKeyUp(keyCode, ctrlKey, shiftKey, altKey, selectedText);
         }, 5);
     }
 }
 
 //Replace alert with a custom bootstrap styled one.
-window.alert = function (msg, type, selfCloseSeconds) {
+global.alert = function (msg, type, selfCloseSeconds) {
+    var hasValidType = ['success', 'info', 'warning', 'danger'].includes(type.toLowerCase());
     $('#divAlertMessage').html(msg);
     $('#divAlert')
         .removeClass('alert-success alert-info alert-warning alert-danger')
-        .addClass(type && ['success', 'info', 'warning', 'danger'].indexOf(type.toString().toLowerCase()) > -1 ?
-            'alert-' + type.toLowerCase() : 'alert-info')
+        .addClass(hasValidType ? 'alert-' + type.toLowerCase() : 'alert-info')
         .css({
             'left': parseInt(($('body').innerWidth() / 2) - ($('#divAlert').width() / 2)).toString() + 'px',
             'zIndex': 1000
         })
         .fadeIn();
     if (selfCloseSeconds) {
-        window.setTimeout(function () {
+        global.setTimeout(function () {
             $('#divAlert').fadeOut();
         }, selfCloseSeconds * 1000);
     }
 }
 
 $(function () {
-    var mv = window.markdownViewer = new MarkdownViewer();
+    var mv = global.markdownViewer = new MarkdownViewer(global);
 
-    $('#btnOpenMarkdown').on('click', () => mv.openFile());
-    $('#btnOpenMarkdown2').on('click', () => mv.openFile());
+    $('.btnOpenMarkdown').on('click', () => mv.openFile());
     $('#btnSaveAsHtml').on('click', () => mv.saveAsHtml());
     $('#btnSaveAsMarkdown').on('click', () => mv.saveAsMarkdown());
     $('#btnSaveAsPDF').on('click', () => mv.printToPdf());

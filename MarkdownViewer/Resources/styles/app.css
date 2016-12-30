@@ -31,3 +31,4 @@ nav.navbar { min-width: 780px; }
     which gets it's head hidden under the nav bar*/
 .editor-toolbar.fullscreen { top: 70px; }
 .CodeMirror-fullscreen, .editor-preview-side { top: 120px; }
+.fa-arrows-alt { display: none !important; }
