@@ -119,11 +119,11 @@ class MarkdownViewer {
     showAbout() {
         alert(`<img src="images\\Icon-sm.png" />&nbsp; &nbsp;
           <strong style="color:#000;font-size:1.4em;">Markdown Viewer</strong>
+          <em style="font-size:8pt;">... view Markdown as it was meant to be viewed ...</em>
           <hr />
           A clean and quick Markdown file viewer for Windows.
-          <br />
           <hr />
-          <small style="font-size:7pt;">Created by Compute Software Solutions<sup>&copy; </sup></small>`, 'info', 5);
+          <small style="font-size:7pt;">Created by Compute Software Solutions<sup>&copy; </sup></small>`, 'info');
     }
 
     //The PageController calls this function if the file we are viewing gets itself deleted.
