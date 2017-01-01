@@ -10,6 +10,7 @@ namespace MarkdownViewer
     {
         #region private variables
         private readonly ChromiumWebBrowser _browser;
+        private readonly PageController _pageController = new PageController();
         private readonly string _baseUrl = "file://" + Program.ResourcesDirectory + "\\";
         private readonly Keys[] _keysWeHandle = new Keys[] { Keys.Escape, Keys.F3, Keys.F };
         #endregion
@@ -24,7 +25,7 @@ namespace MarkdownViewer
                 RequestHandler = new RequestHandler(),
                 MenuHandler = new MenuHandler()
             };
-            this._browser.RegisterJsObject("controller", new PageController());
+            this._browser.RegisterJsObject("controller", this._pageController);
             this.Controls.Add(this._browser);
             this._browser.LoadHtml(Program.GetHtmlTemplate(), this._baseUrl);
             this._browser.LoadingStateChanged += _browser_LoadingStateChanged;
@@ -32,6 +33,26 @@ namespace MarkdownViewer
         #endregion
 
         #region event handlers       
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (this._pageController.HasUnsavedChanges())
+            {
+                var result = MessageBox.Show("There are unsaved changes. Do you wish to save your changes?", "MarkdownViewer", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                switch (result)
+                {
+                    case DialogResult.Cancel:
+                        e.Cancel = true;
+                        break;
+                    case DialogResult.Yes:
+                        if (!this._pageController.SaveMarkdown())
+                        {
+                            this._pageController.SaveAsMarkdown();
+                        }
+                        break;
+                }
+            }
+        }
+
         private void txtFind_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Tab || e.KeyCode == Keys.Enter && !string.IsNullOrEmpty(this.txtFind.Text))
@@ -249,6 +270,6 @@ namespace MarkdownViewer
                     break;
             }
         }
-        #endregion       
+        #endregion
     }
 }

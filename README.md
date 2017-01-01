@@ -18,7 +18,9 @@ Markdown file editing is done using the wonderful [SimpleMDE](https://simplemde.
 The application is actually a web site and it allows full customization of the GUI - including the option to change the entire page. 
 
 To customize the GUI you can either:
+
 1. Edit the /Resources/HTML_TEMPLATE.html file. The styles are contained in /Resources/styles/app.css and the code is in /Resources/scripts/app.js
+
 2. Create a new template. To configure the application to use your new template, open the MarkdownViewer.exe.config file and edit the configuration/userSettings/MarkdownViewer.Properties.Settings/setting element to point to your template.
 
 #### The Client Side Javascript

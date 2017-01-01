@@ -188,5 +188,22 @@ namespace MarkdownViewer
                 Program.MainForm.DoKeyUp((Keys)keyCode, control, shift, alt, selectedText);
             }));
         }
+
+        public bool HasUnsavedChanges()
+        {
+            //If there is no file open, we will return false.
+            //We start with the assumption that there were changes (it saves a few lines of code)
+            bool hasChanges = !string.IsNullOrEmpty(this.MarkdownPath);
+            //If the MarkdownPath is not empty and the file does not exists anymore, we will return true.
+            if(hasChanges && File.Exists(this.MarkdownPath))
+            {
+                var text = File.ReadAllText(this.MarkdownPath);
+                if(text == this.MarkdownText)
+                {
+                    hasChanges = false;
+                }
+            }
+            return hasChanges;
+        }
     }
 }

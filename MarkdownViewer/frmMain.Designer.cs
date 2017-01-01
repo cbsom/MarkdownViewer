@@ -99,6 +99,7 @@
             this.MinimumSize = new System.Drawing.Size(1061, 47);
             this.Name = "frmMain";
             this.Text = "Markdown Viewer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.pnlFind.ResumeLayout(false);
             this.pnlFind.PerformLayout();
             this.ResumeLayout(false);

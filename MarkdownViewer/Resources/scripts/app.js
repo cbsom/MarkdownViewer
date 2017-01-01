@@ -10,7 +10,7 @@ const State_Editing = 1;
 
 class MarkdownViewer {
     constructor(global) {
-        this.global = global;        
+        this.global = global;
         this.showingSideBySide = false;
         this.state = State_Previewing;
         this.initialize();
@@ -25,7 +25,7 @@ class MarkdownViewer {
 
             //The html has loaded onto the page. We can now format the code sections.
             this.global.loadBrushes();
-            SyntaxHighlighter.all();            
+            SyntaxHighlighter.all();
 
             //If this function is being called by the controller, for example if a new file is being opened, 
             //we want to make sure that we show the html preview - even if the user was in middle of editing the original file.
@@ -54,7 +54,7 @@ class MarkdownViewer {
         //If the user was previously editing side-by-side before previewing, they probably want to go back to that.
         if (this.showingSideBySide === true) {
             this.showSideBySide(true);
-        }        
+        }
     }
 
     showFormatted() {
@@ -84,7 +84,18 @@ class MarkdownViewer {
 
     //Open a different Markdown file
     openFile() {
-        controller.openMarkdown();
+        if (controller.hasUnsavedChanges()) {
+            confirm('There are unsaved changes.<br /> Do you wish to save these changes?', 'Save Changes?',
+                (/*onYes*/) => {
+                    this.saveChanges();
+                    alert('The changes have been saved.');
+                    controller.openMarkdown();
+                },
+                (/*onNo*/) => controller.openMarkdown());
+        }
+        else {
+            controller.openMarkdown();
+        }
     }
 
     //Save the current Markdown as html
@@ -158,9 +169,8 @@ class MarkdownViewer {
                 title: "Markdown Guide"
             }]
         });
-        this.simplemde.codemirror.on("change", function () {
-            controller.markdownText = this.simplemde.value();
-        });
+        this.simplemde.codemirror.on("change",
+            () => controller.markdownText = this.simplemde.value());
     }
 
     saveChanges() {
@@ -206,7 +216,7 @@ class MarkdownViewer {
 
 //Replace alert with a custom bootstrap styled one.
 global.alert = function (msg, type, selfCloseSeconds) {
-    var hasValidType = ['success', 'info', 'warning', 'danger'].includes(type.toLowerCase());
+    var hasValidType = type && ['success', 'info', 'warning', 'danger'].includes(type.toLowerCase());
     $('#divAlertMessage').html(msg);
     $('#divAlert')
         .removeClass('alert-success alert-info alert-warning alert-danger')
@@ -221,6 +231,22 @@ global.alert = function (msg, type, selfCloseSeconds) {
             $('#divAlert').fadeOut();
         }, selfCloseSeconds * 1000);
     }
+}
+
+//Replace confirm with a custom bootstrap styled one that has 3 events.
+global.confirm = function (msg, title, onYes, onNo, OnCancel) {
+    $('#divConfirmTitle').html(title || 'Please confirm...');
+    $('#pConfirmBody').html(msg || 'Are you sure?');
+    $('#btnConfirmCancel').off('click').one('click', function () {
+        if (OnCancel) { OnCancel(); }
+    });
+    $('#btnConfirmYes').off('click').one('click', function () {
+        if (onYes) { onYes(); }
+    });
+    $('#btnConfirmNo').off('click').one('click', function () {
+        if (onNo) { onNo(); }
+    });
+    $('#divConfirm').modal('show');
 }
 
 $(function () {
