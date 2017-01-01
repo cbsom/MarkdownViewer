@@ -12,7 +12,7 @@ namespace MarkdownViewer
         private readonly ChromiumWebBrowser _browser;
         private readonly PageController _pageController = new PageController();
         private readonly string _baseUrl = "file://" + Program.ResourcesDirectory + "\\";
-        private readonly Keys[] _keysWeHandle = new Keys[] { Keys.Escape, Keys.F3, Keys.F };
+        private readonly Keys[] _keysWeHandle = new Keys[] { Keys.Escape, Keys.F3, Keys.F, Keys.S };
         #endregion
 
         #region constructors
@@ -35,21 +35,9 @@ namespace MarkdownViewer
         #region event handlers       
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this._pageController.HasUnsavedChanges())
+            if (!this._pageController.CheckForChanges())
             {
-                var result = MessageBox.Show("There are unsaved changes. Do you wish to save your changes?", "MarkdownViewer", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                switch (result)
-                {
-                    case DialogResult.Cancel:
-                        e.Cancel = true;
-                        break;
-                    case DialogResult.Yes:
-                        if (!this._pageController.SaveMarkdown())
-                        {
-                            this._pageController.SaveAsMarkdown();
-                        }
-                        break;
-                }
+                e.Cancel = true;
             }
         }
 
@@ -140,7 +128,6 @@ namespace MarkdownViewer
                 this._browser.Find(0, this.txtFind.Text, true, false, true);
             }));
         }
-
         #endregion
 
         #region public/internal functions
@@ -265,6 +252,15 @@ namespace MarkdownViewer
                         else
                         {
                             this.ToggleFind();
+                        }
+                    }
+                    break;
+                case Keys.S:
+                    if (control && this._pageController.CheckForChanges())
+                    {
+                        if (this._pageController.SaveMarkdown() || this._pageController.SaveAsMarkdown())
+                        {
+                            this.RunJavscript("alert('Your changes have been successfully saved.', 'success', 2);");
                         }
                     }
                     break;

@@ -85,10 +85,13 @@ namespace MarkdownViewer
 
         internal static void Log(string mdPath, string message, params object[] args)
         {
+
+#if DEBUG
             Console.WriteLine("{0}\t[{1}]\t{2}",
                 DateTime.Now.TimeOfDay.ToString(),
                 (string.IsNullOrEmpty(mdPath) ? " ? " : Path.GetFileName(mdPath)),
                 string.Format(message, args));
+#endif
         }
 
         internal static void ChangeFile(string path)

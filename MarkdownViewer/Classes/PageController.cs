@@ -74,8 +74,9 @@ namespace MarkdownViewer
             }
         }
 
-        public void SaveAsMarkdown()
+        public bool SaveAsMarkdown()
         {
+            bool success = false;
             using (SaveFileDialog d = new SaveFileDialog()
             {
                 AddExtension = true,
@@ -93,16 +94,22 @@ namespace MarkdownViewer
                     if (d.ShowDialog(Program.MainForm) == DialogResult.OK)
                     {
                         File.WriteAllText(d.FileName, this.MarkdownText);
+                        success = true;
                         Program.MainForm.RunJavscript("alert('" +
                             d.FileName.Replace(@"\", @"\\") +
                             @"\nhas been successfully created.');");
                     }
                 }));
             }
+            return success;
         }
 
         public void OpenMarkdown()
         {
+            if (!this.CheckForChanges())
+            {
+                return;
+            }
             using (OpenFileDialog d = new OpenFileDialog()
             {
                 DefaultExt = "md",
@@ -189,19 +196,45 @@ namespace MarkdownViewer
             }));
         }
 
-        public bool HasUnsavedChanges()
+        /// <summary>
+        /// Checks for changes to the markdown text. Returns false if the user chose "Cancel" otherwise returns true.
+        /// </summary>
+        /// <returns></returns>
+        internal bool CheckForChanges()
+        {
+            bool situationDealtWith = true;
+            if (this.HasUnsavedChanges())
+            {
+                var result = MessageBox.Show("There are unsaved changes. Do you wish to save your changes?", "MarkdownViewer", 
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                switch (result)
+                {
+                    case DialogResult.Cancel:
+                        situationDealtWith = false;
+                        break;
+                    case DialogResult.Yes:                        
+                        if(this.SaveMarkdown() || this.SaveAsMarkdown())
+                        {
+                            Program.MainForm.RunJavscript("alert('Your changes have been successfully saved.', 'success', 2);");
+                        }
+                        else
+                        {
+                            situationDealtWith = false;
+                        }
+                        break;
+                }
+            }
+
+            return situationDealtWith;
+        }
+
+        private bool HasUnsavedChanges()
         {
             //If there is no file open, we will return false.
-            //We start with the assumption that there were changes (it saves a few lines of code)
-            bool hasChanges = !string.IsNullOrEmpty(this.MarkdownPath);
-            //If the MarkdownPath is not empty and the file does not exists anymore, we will return true.
-            if(hasChanges && File.Exists(this.MarkdownPath))
+            bool hasChanges = false;
+            if (!string.IsNullOrEmpty(this.MarkdownPath) && File.Exists(this.MarkdownPath))
             {
-                var text = File.ReadAllText(this.MarkdownPath);
-                if(text == this.MarkdownText)
-                {
-                    hasChanges = false;
-                }
+                hasChanges = (File.ReadAllText(this.MarkdownPath) != this.MarkdownText);                
             }
             return hasChanges;
         }

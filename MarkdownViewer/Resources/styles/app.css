@@ -23,6 +23,13 @@ nav.navbar { min-width: 780px; }
 #divAlert { position: absolute; top: 40%; width: auto; box-shadow: 10px 10px 10px #888; display: none; }
 #divAlertMessage { font-size: 1.3em; }
 
+.modal-header i{font-size:35px;}
+.info .modal-footer, .info .modal-header { background-color: #000; color: #44b; }
+.success .modal-footer, .success .modal-header { background-color: #ded; color: #060; }
+.warning .modal-footer, .warning .modal-header { background-color: #fb8; color: #800; }
+.danger .modal-footer, .danger .modal-header { background-color: #fcc; color: #f00; }
+
+
 /*Hide SyntaxHighlighter help links*/
 .syntaxhighlighter { overflow: visible !important; }
 .toolbar { visibility: hidden !important; }
@@ -31,4 +38,6 @@ nav.navbar { min-width: 780px; }
     which gets it's head hidden under the nav bar*/
 .editor-toolbar.fullscreen { top: 70px; }
 .CodeMirror-fullscreen, .editor-preview-side { top: 120px; }
+
+/*Hide the full screen button*/
 .fa-arrows-alt { display: none !important; }

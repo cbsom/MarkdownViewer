@@ -84,18 +84,7 @@ class MarkdownViewer {
 
     //Open a different Markdown file
     openFile() {
-        if (controller.hasUnsavedChanges()) {
-            confirm('There are unsaved changes.<br /> Do you wish to save these changes?', 'Save Changes?',
-                (/*onYes*/) => {
-                    this.saveChanges();
-                    alert('The changes have been saved.');
-                    controller.openMarkdown();
-                },
-                (/*onNo*/) => controller.openMarkdown());
-        }
-        else {
-            controller.openMarkdown();
-        }
+        controller.openMarkdown();
     }
 
     //Save the current Markdown as html
@@ -139,7 +128,7 @@ class MarkdownViewer {
 
     //The PageController calls this function if the file we are viewing gets itself deleted.
     fileWasDeleted() {
-        alert('The Markdown file has been deleted!', 'warning', 5);
+        alert('The Markdown file has been deleted!', 'warning', 3);
     }
 
     //Create a SimpleMDEeditor component - cooked the way we like it
@@ -175,7 +164,7 @@ class MarkdownViewer {
 
     saveChanges() {
         if (controller.saveMarkdown()) {
-            alert('The file has been saved.', 'info', 2);
+            alert('The file has been successfully saved.', 'success', 2);
         }
         else {
             alert('The file could not be saved at this time.', 'warning');
@@ -216,37 +205,34 @@ class MarkdownViewer {
 
 //Replace alert with a custom bootstrap styled one.
 global.alert = function (msg, type, selfCloseSeconds) {
-    var hasValidType = type && ['success', 'info', 'warning', 'danger'].includes(type.toLowerCase());
+    var types = ['success', 'info', 'warning', 'danger'],
+        hasValidType = type && types.includes(type.toLowerCase()),
+        iconHtml = '<i class="fa fa-';
+
+    type = hasValidType ? type.toLowerCase() : 'info';
+
+    switch (type) {
+        case 'info':
+            iconHtml += 'info-circle';
+            break;
+        case 'success':
+            iconHtml += 'check-square';
+            break;
+        default:
+            iconHtml += 'warning';
+            break;
+    }
+    iconHtml += '"></i>';
     $('#divAlertMessage').html(msg);
-    $('#divAlert')
-        .removeClass('alert-success alert-info alert-warning alert-danger')
-        .addClass(hasValidType ? 'alert-' + type.toLowerCase() : 'alert-info')
-        .css({
-            'left': parseInt(($('body').innerWidth() / 2) - ($('#divAlert').width() / 2)).toString() + 'px',
-            'zIndex': 1000
-        })
-        .fadeIn();
+    $('#divAlert').modal('show')
+        .removeClass(types.join(' '))
+        .addClass(type)
+        .find('.modal-title').html(iconHtml);
     if (selfCloseSeconds) {
         global.setTimeout(function () {
-            $('#divAlert').fadeOut();
+            $('#divAlert').modal('hide');
         }, selfCloseSeconds * 1000);
     }
-}
-
-//Replace confirm with a custom bootstrap styled one that has 3 events.
-global.confirm = function (msg, title, onYes, onNo, OnCancel) {
-    $('#divConfirmTitle').html(title || 'Please confirm...');
-    $('#pConfirmBody').html(msg || 'Are you sure?');
-    $('#btnConfirmCancel').off('click').one('click', function () {
-        if (OnCancel) { OnCancel(); }
-    });
-    $('#btnConfirmYes').off('click').one('click', function () {
-        if (onYes) { onYes(); }
-    });
-    $('#btnConfirmNo').off('click').one('click', function () {
-        if (onNo) { onNo(); }
-    });
-    $('#divConfirm').modal('show');
 }
 
 $(function () {
@@ -258,7 +244,6 @@ $(function () {
     $('#btnSaveAsPDF').on('click', () => mv.printToPdf());
     $('#btnShowDevTools').on('click', () => mv.showDevTools());
     $('#btnAbout').on('click', () => mv.showAbout());
-    $('#btnCloseAlert').on('click', () =>  $('#divAlert').fadeOut());
     $('#btnFind').on('click', () =>  mv.find());
     $('body').on('keyup', function (e) { mv.doKeyUp(e); });
 });
