@@ -187,6 +187,11 @@ namespace MarkdownViewer
             }));
         }
 
+        public string Version()
+        {
+            return System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString();
+        }
+
         public void DoKeyUp(int keyCode, bool control, bool shift, bool alt, string selectedText)
         {
             //As this will be called from within the browser, it will be on another UI thread

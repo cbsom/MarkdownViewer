@@ -11,6 +11,22 @@
     .navbar-nav > li > a { padding-top: 16px; padding-bottom: 15px; }
 }
 
+
+body::-webkit-scrollbar, div::-webkit-scrollbar { -webkit-appearance: none; }
+    body::-webkit-scrollbar:vertical { width: 25px; }
+    body::-webkit-scrollbar:horizontal { height: 25px; }
+body::-webkit-scrollbar-button, div::-webkit-scrollbar-button { display: none; }
+body::-webkit-scrollbar-track { background: #222; }
+body::-webkit-scrollbar-thumb { min-height: 2rem; background: #999; background-clip: padding-box; border: 5px solid #222; border-radius: 10px; }
+    body::-webkit-scrollbar-thumb:active { background-color: #aaa; border-width: 4px; }
+
+div::-webkit-scrollbar:vertical { width: 18px; }
+div::-webkit-scrollbar:horizontal { height: 18px; }
+div::-webkit-scrollbar-track { background: #fbfbfb !important; }
+div::-webkit-scrollbar-thumb { min-height: 2rem; background: #f0f0f0; background-clip: padding-box; border: 3px solid #fff; border-radius: 10px; }
+    div::-webkit-scrollbar-thumb:active { background-color: #ddd; border-width: 2px; }
+
+
 a { cursor: pointer; }
 
 nav.navbar { min-width: 780px; }
@@ -23,7 +39,7 @@ nav.navbar { min-width: 780px; }
 #divAlert { position: absolute; top: 40%; width: auto; box-shadow: 10px 10px 10px #888; display: none; }
 #divAlertMessage { font-size: 1.3em; }
 
-.modal-header i{font-size:35px;}
+.modal-header i { font-size: 35px; }
 .info .modal-footer, .info .modal-header { background-color: #000; color: #44b; }
 .success .modal-footer, .success .modal-header { background-color: #ded; color: #060; }
 .warning .modal-footer, .warning .modal-header { background-color: #fb8; color: #800; }

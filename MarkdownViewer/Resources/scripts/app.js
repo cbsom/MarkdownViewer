@@ -119,11 +119,12 @@ class MarkdownViewer {
     showAbout() {
         alert(`<img src="images\\Icon-sm.png" />&nbsp; &nbsp;
           <strong style="color:#000;font-size:1.4em;">Markdown Viewer</strong>
-          <em style="font-size:8pt;">... view Markdown as it was meant to be viewed ...</em>
-          <hr />
-          A clean and quick Markdown file viewer for Windows.
-          <hr />
-          <small style="font-size:7pt;">Created by Compute Software Solutions<sup>&copy; </sup></small>`, 'info');
+          <span class ="small">&nbsp; ${controller.version()}</span>
+          <br />
+          <em style="font-size:8pt;margin-left:30px;">... view Markdown as it was meant to be viewed ...</em>
+          <blockquote>A clean and quick Markdown file viewer for Windows.</blockquote>
+          <div style="font-size:7pt;margin-left:10px;">
+            <img src="images\\ComputeIconSmall.jpg" style="height:20px;" /> Compute Software Solutions<sup>&copy; </sup></div>`, 'info');
     }
 
     //The PageController calls this function if the file we are viewing gets itself deleted.
@@ -200,6 +201,10 @@ class MarkdownViewer {
         this.global.setTimeout(function () {
             controller.doKeyUp(keyCode, ctrlKey, shiftKey, altKey, selectedText);
         }, 5);
+    }
+
+    version() {
+        return controller.version();
     }
 }
 
