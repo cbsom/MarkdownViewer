@@ -14,6 +14,11 @@ namespace MarkdownViewer
                 Program.ChangeFile(uri.LocalPath);
                 return true;
             }
+            if (!uri.IsFile)
+            {
+                System.Diagnostics.Process.Start(request.Url);
+                return true;
+            }
 
             return false;
         }
